@@ -1,0 +1,3 @@
+2Opt T1: 2522 in 5828 ms 
+2Opt T2: 2049 in 1116 ms 
+2Opt T3: 1048 in 54 ms 
