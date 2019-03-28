@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<body>
+
+	<div th:fragment="headline (txt)">
+		<div class="container">
+			<br>
+			<header>
+				<h5 class="text-center">
+					<span th:if="${txt != null}" th:text="${txt}"></span>
+				</h5>
+			</header>
+			<br>
+		</div>
+	</div>
+
+
+</body>
+
+</html>

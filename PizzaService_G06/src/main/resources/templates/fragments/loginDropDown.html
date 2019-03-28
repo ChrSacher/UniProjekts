@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head th:fragment="LoginPass">
+	<!-- Required meta tags -->
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<li class="dropdown">
+		<a class="dropdown-toggle" data-toggle="dropdown">Login<b class="caret"></b></a>
+		<ul class="dropdown-menu" style="padding: 15px;min-width: 250px;">
+			<li>
+				<div class="row">
+					<div class="col-md-12">
+						<form class="form" role="form" method="post" th:action="@{/login}" accept-charset="UTF-8" id="login-nav">
+							<div class="form-group">
+								<label class="sr-only" for="LoginInput">Login Name</label>
+								<input type="text" class="form-control" id="LoginInput" name="Login" placeholder="Login Name" required>
+							</div>
+							<div class="form-group">
+								<label class="sr-only" for="passwordInput">Password</label>
+								<input type="password" class="form-control" id="passwordInput" name="Password" placeholder="Password" required>
+							</div>
+							<div class="checkbox">
+								<label>
+									<input type="checkbox"> Remember me
+								</label>
+							</div>
+							<div class="form-group">
+								<button type="submit" class="btn btn-success btn-block">Sign in</button>
+							</div>
+							<div th:if="${param.error}">
+								<br>
+								<div class="alert alert-danger">
+									<span>login oder passwort ist falsch, bitte nochmal versuchen</span>
+								</div>
+							</div>
+
+						</form>
+					</div>
+				</div>
+			</li>
+		</ul>
+	</li>

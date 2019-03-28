@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+	<meta charset="utf-8">
+
+	<head th:include="fragments/header :: head">
+	</head>
+
+<body>
+
+	<div th:include="fragments/body :: headline (txt='Pizza Service' )"></div>
+	<div th:include="fragments/Menu :: menuStrip(CurrentUserInfo=${CurrentUserInfo})" th:with="CurrentUserInfo=${CurrentUserInfo}"></div>
+
+
+	<div class="container">
+		<h5>
+			<span th:text="${'Warenkorb'}">Warenkorb</span>
+		</h5>
+		<table class="table table-hover table-bordered table-fixed">
+
+			<thead>
+				<tr>
+					<th scope="col">Menge</i></th>
+					<th scope="col">Pizza </i></span></th>
+					<th scope="col">Größe</i></span></th>
+					<th scope="col">Preis </i></span></th>
+					<th scope="col">Bestellung löschen</i></span></th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="item : ${Items}">
+					<form th:action="@{/removeFromCart }" method="post">
+						<td class="word-wrap" th:text="${item.quantity}">nix</td>
+						<td class="word-wrap" th:text="${item.pizza.name}">nix</td>
+						<td name="Größe" class="word-wrap" th:text="${item.size}">nix</td>
+						<td name="Preis" class="word-wrap" th:text="${item.price}">nix</td>
+						<td>
+							<input type="hidden" name="itemID" th:value="${item.id}">
+							<input type="submit" class="btn btn-outline-primary btn-sm" value="Remove" />
+						</td>
+					</form>
+				</tr>
+			</tbody>
+		</table>
+		<br />
+
+		<h5>
+			<label for="total">Endpreis</label>
+			<span id="total" th:text="${Total} + '€'">PlaceHolder Endpreis</span>
+		</h5>
+		<br />
+		<table class="table table-hover table-bordered table-fixed">
+			<!-- <thead>
+				<tr>
+					 <th scope="col">Go back to Shopping ></th>
+					<th scope="col"Warenkorb leeren ></th>
+					<th scope="col">Bestellung überprüfen ></th> 
+				</tr>
+			</thead> -->
+			<tbody>
+				<tr>
+					<td>
+						<form th:action="@{/buyPizzas }" method="post">
+							<input type="submit" class="btn btn-outline-primary btn-sm" value="Weitere Pizzen kaufen" />
+						</form>
+					</td>
+					<td>
+						<form th:action="@{/clearCart }" method="post">
+							<input type="submit" class="btn btn-outline-primary btn-sm" value="Warenkorb leeren" />
+						</form>
+					</td>
+					<td >
+						<div class="container2" th:if="${not #lists.isEmpty(Items)}">
+							<form th:action="@{/orderCart }" method="post">
+								<input type="submit" class="btn btn-outline-primary btn-sm" value="Bestellung überprüfen" />
+							</form>
+						</div>
+						
+					</td>
+				</tr>
+			</tbody>
+		</table>
+
+	</div>
+	<br>
+	<div th:include="fragments/footer :: footer"></div>
+</body>
+
+</html>

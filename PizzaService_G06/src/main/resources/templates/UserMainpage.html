@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head th:include="fragments/header :: head">
+	<meta charset="utf-8">
+</head>
+
+<body>
+
+	<div th:include="fragments/body :: headline (txt='Pizza Service EVA' )"></div>
+	<div th:include="fragments/Menu :: menuStrip(CurrentUserInfo=${CurrentUserInfo})" th:with="CurrentUserInfo=${CurrentUserInfo}"></div>
+	<div class="container" th:each="customer : ${Customer}">
+		<h5>
+			<span th:text="${'Nutzerverwaltung'}">Nutzerverwaltung</span>
+		</h5>
+		<div class="container">
+		
+		<h5>Nutzer Daten:</h5>
+		<table class="table table-hover table-bordered table-fixed">
+			<tbody >
+				<tr>			
+						<td  class="word-wrap" >Name: </td>
+						<td  class="word-wrap" th:text = "${customer.firstName}">nix</td>
+				</tr>
+				<tr>			
+						<td  class="word-wrap"> Familienname:</td>
+						<td  class="word-wrap" th:text = "${customer.lastName}">nix</td>
+				</tr>
+				<tr>			
+						<td  class="word-wrap" >E-Mail</td>
+						<td  class="word-wrap" th:text = "${customer.email}">nix</td>
+						
+				</tr>
+				
+			</tbody>
+		</table>
+	<br/>
+	</div>
+		<table class="table table-hover table-bordered table-fixed">
+
+			<thead>
+				<tr>
+					<th scope="col">Name &nbsp;</th>
+					<th scope="col">Vorname &nbsp;</th>
+					<th scope="col">Starße &nbsp;</th>
+					<th scope="col">Hausnummer &nbsp;</th>
+					<th scope="col">Stadt &nbsp;</th>
+					<th scope="col">PLZ &nbsp;</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="adress : ${Adresses}"  >
+					
+						<td name= "name" class="word-wrap" th:text="${adress.name}">nix</td>
+						<td name= "familiyname" class="word-wrap" th:text="${adress.familyName}">nix</td>	
+						<td name= "street" class="word-wrap" th:text="${adress.street}">nix</td>	
+						<td name= "houseNumber" class="word-wrap" th:text="${adress.houseNumber}">nix</td>
+						<td name= "town" class="word-wrap" th:text="${adress.town}">nix</td>	
+						<td name= "plostalCode" class="word-wrap" th:text="${adress.postalCode}">nix</td>	
+						
+						
+						<td>
+							<li class="dropdown">
+								<a class="btn btn-outline-primary btn-sm" data-toggle="dropdown">ändern<b class="caret"></b></a>
+								<ul class="dropdown-menu" style="padding: 15px;min-width: 250px;">
+									<li>
+										<div class="row">
+											<div class="col-md-12">
+												<form class="text-center" th:action="@{/changeAdress}" th:object="${DeliveryAdressForm}" method="post" role="form">
+													  <p>Erstellen Sie eine neue Lieferadresse:</p>
+													  <div class="form-group">
+															<input type="text" th:field="*{name}" id="name" class="form-control input-lg" placeholder="Name" required >
+															<input type="text" th:field="*{familyName}" id="familyName" class="form-control input-lg" placeholder="Familien Name" required>
+															<input type="text" th:field="*{street}" id="street" class="form-control input-lg" placeholder="Stra�e" required>
+															<input type="text" th:field="*{houseNumber}" id="houseNumber" class="form-control input-lg" placeholder="Hausnummer" required>
+															<input type="text" th:field="*{town}" id="town" class="form-control input-lg" placeholder="Stadt" required>
+															<input type="text" th:field="*{postalCode}" id="postalCode" class="form-control input-lg" placeholder="PLZ" required >				
+														</div>
+										
+										            <br/>
+										            <input class="form-control" type="hidden" name="customerId" th:value="${customer.Id}" />
+										            <input class="form-control" type="hidden" name="adressID" th:value="${adress.Id}" />
+													  <input type="submit" class="btn btn-outline-primary" value="Bestätigen der Änderung">
+												</form>
+											</div>
+										</div>
+									</li>
+								</ul>
+							</li>
+						</td>
+						<form th:action="@{/deleteAdress}" method="post">
+							<td>
+								<input type="submit" class="btn btn-outline-primary btn-sm" value="löschen" />
+								<input class="form-control" type="hidden" name="customerId" th:value="${customer.Id}" />
+								<input class="form-control" type="hidden" name="adressID" th:value="${adress.Id}" />
+							</td>
+						</form>
+				</tr>
+			</tbody>
+		</table>
+		<br />
+
+	</div>
+	<br>
+	<div th:include="fragments/footer :: footer"></div>
+</body>
+
+</html>

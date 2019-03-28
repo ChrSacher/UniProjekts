@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+	<meta charset="utf-8">
+	<head th:include="fragments/header :: head">
+</head>
+
+<body>
+
+	<div th:include="fragments/body :: headline (txt='Notenverwaltung' )"></div>
+	<div th:include="fragments/body :: nav (all=false)"></div>
+
+	<div class="container">
+		<h5>
+			<span th:text="${'Gespeicherte Noten'}">PLACEHOLDER</span>
+		</h5>
+		<!--<div id="show"></div>-->
+		<table th:if="${Grades != null}"
+			class="table table-hover table-bordered table-fixed">
+			<thead>
+				<tr>
+					<th scope="col">Lecturename &nbsp;<i
+						class="fas fa-arrow-circle-right"></i></th>
+					<th scope="col">Grade &nbsp;<i class="fas fa-arrow-circle-left"></i></span></th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="grade : ${Grades}">					
+						<td class="word-wrap" th:text="${grade.lecture}">nix</td>
+						<td class="word-wrap" th:text="${grade.grade}">nix</td>
+				</tr>
+			</tbody>
+		</table>
+		<h5 th:if="${GradeAverage != null}">
+			<span th:text="${'Notendurchschnitt ' + GradeAverage}">PLACEHOLDER</span>
+		</h5>
+		<br/>
+		<h5>Neue Note erstellen</h5>
+		<form th:action="@{/addGrade }" method="post">
+			<input class="form-control" type="text" name="lectureName" minlength="1" maxlength="255" /> 
+			<input class="form-control" type="number" name="grade"  min="1" max="5" />
+			<br /> 
+			<input type="submit" class="btn btn-outline-primary btn-sm" value="Add new Grade" />
+		</form>
+		
+	</div>
+	<br>
+	<div th:include="fragments/footer :: footer"></div>
+</body>
+</html>
