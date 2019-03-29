@@ -39,12 +39,11 @@ public class PropertyDetails extends Activity {
 	 */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {		
-		String propertyID = null;
-		String toRentStr = null;
-		boolean toRent = false; //Contains whether the user is looking to 'buy' 
-								//or 'rent' a property. This information is 
-								//obtained from the Extras bundle. 
-		
+
+		boolean toRent = false; //Contains whether the user is looking to 'buy'
+								//or 'rent' a property. This information is
+								//obtained from the Extras bundle.
+
 		super.onCreate(savedInstanceState);
 		Log.d(TAG, "onCreate");
 
@@ -62,8 +61,11 @@ public class PropertyDetails extends Activity {
 		//*************************************************************
 		//INSERT CODE HERE.
         //*************************************************************
-
 		//Open the database.
+
+		String propertyID = getIntent().getStringExtra(PropertyApp.EXTRA_PROPERTY_ID);
+		String toRentStr = Boolean.toString(getIntent().getBooleanExtra(PropertyApp.EXTRA_TO_RENT,false));
+
 		mDb = new PropertyDB(this);
 		mDb.open(toRent, false);
 		cursor = mDb.getCursorToThePropertyList();

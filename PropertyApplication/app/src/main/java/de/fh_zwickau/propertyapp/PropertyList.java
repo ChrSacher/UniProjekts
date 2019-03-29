@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
@@ -58,7 +59,7 @@ public class PropertyList extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		String toRentStr;
-		boolean toRent = false; //Contains whether the user is looking to 'buy' 
+		final boolean toRent; //Contains whether the user is looking to 'buy'
 								//or 'rent' a property. This information is 
 								//obtained from the Extras bundle. 
 		
@@ -74,7 +75,7 @@ public class PropertyList extends Activity {
 		//*********************************************************************
 		//INSERT CODE HERE.
         //*********************************************************************
-
+		setContentView(R.layout.propertylisting);
 		/* Get Intent extra's */
 		//*********************************************************************
 		//* TODO [06]: Fügen Sie Java-Code ein, der benötigt wird, um die Extras
@@ -84,6 +85,7 @@ public class PropertyList extends Activity {
         //*********************************************************************
 		//INSERT CODE HERE.
         //*********************************************************************
+		toRent = getIntent().getBooleanExtra(PropertyApp.EXTRA_TO_RENT,false);
 
 		mDb = new PropertyDB(this);
 		mDb.open(toRent, false);
@@ -114,6 +116,11 @@ public class PropertyList extends Activity {
 		        //*************************************************************
 				//INSERT CODE HERE.
 		        //*************************************************************
+				Intent intent = new Intent(PropertyList.this, PropertyDetails.class);
+				intent.putExtra(PropertyApp.EXTRA_TO_RENT, toRent);
+				Property item = (Property)a.getItemAtPosition(position);
+				intent.putExtra(PropertyApp.EXTRA_PROPERTY_ID, item.getPropertyID());
+				startActivity(intent);
 			}
 		});
 	} // onCreate

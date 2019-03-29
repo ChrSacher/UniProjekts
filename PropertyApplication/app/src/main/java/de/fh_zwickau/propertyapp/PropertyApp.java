@@ -1,5 +1,6 @@
 package de.fh_zwickau.propertyapp;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.app.Activity;
 import android.os.Bundle;
@@ -8,7 +9,13 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Spinner;
+
+import static android.provider.AlarmClock.EXTRA_MESSAGE;
 
 /******************************************************************************
  * Mobile Anwendungen, Westsächsische Hochschule Zwickau.
@@ -92,7 +99,7 @@ public class PropertyApp extends AppCompatActivity implements OnItemSelectedList
 	String[] stateItems = {"Sachsen","Sachsen-Anhalt","Niedersachsen"};
 	String[] numberedItems = {"0","1 oder mehr"};
 
-
+	boolean to_rent = true;
 	PropertyDB mDb = null;
 
     /**
@@ -165,22 +172,98 @@ public class PropertyApp extends AppCompatActivity implements OnItemSelectedList
 		//
     	//*********************************************************************
 		Spinner propertySpinnder = (Spinner)findViewById(R.id.PropertyTypeSpinner);
-		ArrayAdapter<String> pAdapter = new ArrayAdapter<String>(this,R.layout.searchpage,R.id.PropertyTypeSpinner,propertyItems);
+		ArrayAdapter<String> pAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,propertyItems);
+        pAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		propertySpinnder.setAdapter(pAdapter);
+        propertySpinnder.setOnItemSelectedListener(new OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
 
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+
+            }
+        });
+
+		Spinner stateSpinner = (Spinner)findViewById(R.id.StateSpinner);
+		ArrayAdapter<String> sAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,stateItems);
+		sAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		stateSpinner.setAdapter(sAdapter);
+		stateSpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
+			@Override
+			public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+
+			}
+
+			@Override
+			public void onNothingSelected(AdapterView<?> parentView) {
+
+			}
+		});
 
 		Spinner bathRoomSPinner = (Spinner)findViewById(R.id.BathRoomSpinner);
-		ArrayAdapter<String> bAdapter = new ArrayAdapter<String>(this,R.layout.searchpage,R.id.PropertyTypeSpinner,propertyItems);
+		ArrayAdapter<String> bAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,numberedItems);
+        bAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		bathRoomSPinner.setAdapter(bAdapter);
+		bathRoomSPinner.setOnItemSelectedListener(new OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+
+        }
+        });
 
 		Spinner bedRoomSpinner = (Spinner)findViewById(R.id.BedRoomSpinnter);
-		ArrayAdapter<String> rAdapter = new ArrayAdapter<String>(this,R.layout.searchpage,R.id.PropertyTypeSpinner,propertyItems);
+		ArrayAdapter<String> rAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,numberedItems);
+        rAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		bedRoomSpinner.setAdapter(rAdapter);
+        bedRoomSpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+
+            }
+        });
 
 		Spinner carSpaceSpinner = (Spinner)findViewById(R.id.CarSpacesSpinner);
-		ArrayAdapter<String> cAdapter = new ArrayAdapter<String>(this,R.layout.searchpage,R.id.PropertyTypeSpinner,propertyItems);
+		ArrayAdapter<String> cAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,numberedItems);
+        cAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		carSpaceSpinner.setAdapter(cAdapter);
+        carSpaceSpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
 
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+
+            }
+        });
+		RadioButton toRent = findViewById(R.id.rentRadioButton);
+		toRent.setChecked(true);
+
+
+		Button searchButton = findViewById(R.id.SearchButton);
+		searchButton.setOnClickListener((x) ->
+		{
+			RadioGroup rentRadio = findViewById(R.id.rentGroup);
+			to_rent =  rentRadio.getCheckedRadioButtonId() == R.id.rentRadioButton;
+			populatePropertyCatalog(to_rent);
+			Intent intent = new Intent(this, PropertyList.class);
+			intent.putExtra(EXTRA_TO_RENT, to_rent);
+			startActivity(intent);
+		});
 
     } //initialiseSearchPageGUI
 
