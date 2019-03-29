@@ -1,5 +1,6 @@
 package application.view;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -7,8 +8,10 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import javafx.scene.layout.Pane;
 
 public class MainController
 {
@@ -36,13 +39,28 @@ public class MainController
 				System.out.println(rs.getMetaData().getColumnName(1));
 			}
 			
-			Tab mitTab = new Tab("Mitarbeiter");
-			tabView.getTabs().add(mitTab);
+			
 			
 		}
 		// Handle any errors that may have occurred.
 		catch (SQLException e)
 		{
+			e.printStackTrace();
+		}
+		
+		
+		
+		try {
+			Tab mitTab = new Tab("Mitarbeiter");
+			tabView.getTabs().add(mitTab);
+			FXMLLoader mLoader = new FXMLLoader(getClass().getResource("view/TableView.fxml"));
+			Pane root = mLoader.load();
+			TableSQLController con = mLoader.getController();
+			con.init("Mitarbeiter", this);
+			mitTab.setContent(root);
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
