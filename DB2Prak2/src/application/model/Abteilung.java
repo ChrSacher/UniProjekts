@@ -1,24 +1,68 @@
 package application.model;
 
-public class Abteilung extends BaseEntity<Long>
-{
-	private String abtName = "";
+import application.TableInfo.TableName;
+import application.TableInfo.ColumnName;
 
-	public Abteilung(Long id, String abtName)
-	{
-		super(id);
-		this.abtName = abtName;
-	}
+@TableName(name = "Abteilung")
+public class Abteilung extends BaseEntity{
+    
+    @ColumnName(name = "AbtNr")
+    private String AbtNr = "";
+    
+    @ColumnName(name = "AbtName")
+    private String AbtName = "";
 
-	public String getAbtName()
-	{
-		return abtName;
-	}
+    /**
+     * @param abtNr
+     * @param abtName
+     */
+    public Abteilung(String abtNr, String abtName) {
+	super();
+	AbtNr = abtNr;
+	AbtName = abtName;
+    }
 
-	public void setAbtName(String abtName)
-	{
-		this.abtName = abtName;
-	}
-	
-	
+    /**
+     * 
+     */
+    public Abteilung() {
+	super();
+    }
+
+    /**
+     * @return the abtNr
+     */
+    public String getAbtNr() {
+        return AbtNr;
+    }
+
+    /**
+     * @param abtNr the abtNr to set
+     */
+    public void setAbtNr(String abtNr) {
+        AbtNr = abtNr;
+    }
+
+    /**
+     * @return the abtName
+     */
+    public String getAbtName() {
+        return AbtName;
+    }
+
+    /**
+     * @param abtName the abtName to set
+     */
+    public void setAbtName(String abtName) {
+        AbtName = abtName;
+    }
+
+    
+    // @Override
+    // public void loadFrom(Map<String, String> dataMap) {
+    // setId(dataMap.getOrDefault("AbtNr ", "Null"));
+    // abtName = dataMap.getOrDefault("AbtName", "Null");
+    //
+    // }
+
 }
