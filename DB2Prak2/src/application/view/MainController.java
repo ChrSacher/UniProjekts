@@ -2,35 +2,40 @@ package application.view;
 
 import java.io.IOException;
 import java.sql.Connection;
+import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.TreeMap;
 import java.util.function.Supplier;
 
+import application.TableInfo.TableColumnData;
 import application.TableInfo.TableData;
-import application.model.Abteilung;
 import application.model.BaseEntity;
-import application.model.Geleistet;
-import application.model.Kunde;
-import application.model.Mitarbeiter;
-import application.model.Projekt;
-import application.model.Taetigkeit;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 
 public class MainController {
     private Connection connection;
     @FXML
     private TabPane tabView;
 
-    private Map<String, TableData<? extends BaseEntity>> tableData = new HashMap<String, TableData<? extends BaseEntity>>();
+    private Map<String, TableData> tableData = new TreeMap<String, TableData>();
     String connectionUrl = "jdbc:sqlserver://localhost:1433;" + "database=PZM1;" + "user=SQLTEACHER;"
 	    + "password=12345;";
 
@@ -39,54 +44,107 @@ public class MainController {
 
 	try {
 	    setConnection(DriverManager.getConnection(connectionUrl));
+	    DatabaseMetaData meta = connection.getMetaData();
+	    ResultSet resultSet = meta.getTables(null, null, null, new String[] { "TABLE" });
 
+	    while (resultSet.next()) {
+		if ("trace_xe_action_map".equals(resultSet.getString(3))
+			|| "trace_xe_event_map".equals(resultSet.getString(3)))
+		    continue;
+		ResultSet foreignKeys = meta.getImportedKeys(null, null, resultSet.getString(3));
+		addNewTable(resultSet.getString(3), foreignKeys);
+	    }
 	}
 	// Handle any errors that may have occurred.
 	catch (SQLException e) {
 	    e.printStackTrace();
 	}
 
-	addNewTable("Mitarbeiter",() -> new Mitarbeiter());
-	addNewTable("Taetigkeit",() -> new Taetigkeit());
-	addNewTable("Kunde",() -> new Kunde());
-	addNewTable("Abteilung",() -> new Abteilung());
-	addNewTable("Projekt",() -> new Projekt());
-	addNewTable("Geleistet",() -> new Geleistet());
-	
-	try {
-	    addTab("Mitarbeiter", "Mitarbeiter");
-	    addTab("Taetigkeit", "Taetigkeit");
-	    addTab("Kunde", "Kunde");
-	    addTab("Abteilung", "Abteilung");
-	    addTab("Projekt", "Projekt");
-	    addTab("Geleistet", "Geleistet");
-
-	} catch (IOException e) {
-	    // TODO Auto-generated catch block
-	    e.printStackTrace();
-	}
+	tableData.forEach((key, value) -> {
+	    addTab(value);
+	});
+	tabView.tabMinWidthProperty().set(100);// set the tabPane's tabs min and max widths to be the same.
+	tabView.tabMaxWidthProperty().set(100);// set the tabPane's tabs min and max widths to be the same.
+	tabView.setMinWidth((100 * tabView.getTabs().size()) + 55);// set the tabPane's minWidth and maybe max width to
+								   // the tabs combined width + a padding value
+	tabView.setPrefWidth((100 * tabView.getTabs().size()) + 55);// set the tabPane's minWidth and maybe max width to
+								    // the tabs combined width + a padding value
     }
 
-    public void addTab(String name, String tableName) throws IOException {
+    public void addTab(TableData data) {
 
-	Tab mitTab = new Tab(name);
+	//Create TAb
+	Tab mitTab = new Tab(data.getTableName());
 	tabView.getTabs().add(mitTab);
-	FXMLLoader mLoader = new FXMLLoader(getClass().getResource("TableView.fxml"));
-	TableView root = mLoader.load();
-	TableSQLController con = mLoader.getController();
-	con.init(tableName, this);
-	mitTab.setContent(root);
 
+
+	
+	
+	//Create Grid for layout
+	GridPane grid = new GridPane();
+	TableView<BaseEntity> table = new TableView();
+	ColumnConstraints column1 = new ColumnConstraints();
+	column1.setPercentWidth(50);
+	grid.getColumnConstraints().add(column1);
+
+	
+	int i = 0;
+	for (Entry<String, TableColumnData> entry : data.getData().entrySet()) {
+	    
+	    //Combo box for foreign keys else editbox
+	    if (data.getForeignKeys().containsKey(entry.getKey())) {
+		Label label = new Label(entry.getKey());
+		grid.add(label, 0, i++);
+
+	    } else {
+		Label label = new Label(entry.getKey());
+		grid.add(label, 0, i);
+
+		TextField text = new TextField("");
+		grid.add(text, 1, i++);
+
+		
+		//Listener for selecting an a new entity
+		data.getSelectedEntity().addListener((observableVal, old, newValue) -> {
+		    if (newValue != null) {
+			text.setText(newValue.getValue(entry.getKey()));
+		    }
+		});
+		
+		//Listener for changing the entity based on values
+		text.textProperty().addListener((observable, oldValue, newValue) -> {
+		    if (data.getSelectedEntity() != null) {
+			data.getSelectedEntity().getValue().setValue(entry.getKey(), newValue);
+		    }
+		});
+	    }
+	    
+	    //Create TableColumn
+	    TableColumn<BaseEntity, String> column = new TableColumn(entry.getKey());
+	    column.setCellValueFactory(cellValue -> new SimpleStringProperty(cellValue.getValue().getValue(entry.getKey())));
+	    table.getColumns().add(column);
+	}
+	//Set Listener on table for selecting an entity
+	table.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+	    data.setSelectedEntity(newSelection);
+	});
+	grid.add(table, 0, i, 5, 1);
+	mitTab.setContent(grid);
+	table.setItems(data.getValues());
     }
 
-    public <T extends BaseEntity<?>> void addNewTable(String tableName, Supplier<T> supplier) {
+    public void addNewTable(String tableName, ResultSet foreignKeys) {
 	try {
 	    setConnection(DriverManager.getConnection(connectionUrl));
 
 	    Statement stmt = getConnection().createStatement();
 	    String SQL = "SELECT * FROM " + tableName;
+
 	    ResultSet rs = stmt.executeQuery(SQL);
-	    tableData.put(tableName, new TableData<T>(supplier, rs));
+
+	    TableData da = new TableData(rs, foreignKeys);
+	    da.setTableName(tableName);
+	    tableData.put(tableName, da);
 
 	}
 	// Handle any errors that may have occurred.
