@@ -4,8 +4,26 @@ public class TableColumnData {
     private String name = "";
     private String displayName = "";
     private String type = "";
-    private TableData foreignKeySQL = null;
-    /**
+    private String foreignColumn = "";
+    private String foreignTable = "";
+    
+    public String getForeignColumn()
+	{
+		return foreignColumn;
+	}
+	public void setForeignColumn(String foreignColumn)
+	{
+		this.foreignColumn = foreignColumn;
+	}
+	public String getForeignTable()
+	{
+		return foreignTable;
+	}
+	public void setForeignTable(String foreignTable)
+	{
+		this.foreignTable = foreignTable;
+	}
+	/**
      * @return the name
      */
     public String getName() {
@@ -41,17 +59,6 @@ public class TableColumnData {
     public void setType(String type) {
         this.type = type;
     }
-    /**
-     * @return the foreignKeySQL
-     */
-    public TableData getForeignKeySQL() {
-        return foreignKeySQL;
-    }
-    /**
-     * @param foreignKeySQL the foreignKeySQL to set
-     */
-    public void setForeignKeySQL(TableData foreignKeySQL) {
-        this.foreignKeySQL = foreignKeySQL;
-    }
+
     
 }

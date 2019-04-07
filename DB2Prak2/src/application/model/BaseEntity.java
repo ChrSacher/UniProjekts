@@ -7,7 +7,18 @@ import java.util.Map;
 public class BaseEntity {
 
     private Map<String, String> dbEntryValueMap = new HashMap();
-
+    
+    @Override
+	public boolean equals(Object arg0)
+	{
+    	BaseEntity other = (BaseEntity)arg0;
+    	if(other == null) return false;
+    	return dbEntryValueMap.equals(other.dbEntryValueMap);
+	}
+	public BaseEntity(BaseEntity other)
+    {
+    	dbEntryValueMap = new HashMap(other.dbEntryValueMap);
+    }
     /**
      * @return the dbEntryValueMap
      */

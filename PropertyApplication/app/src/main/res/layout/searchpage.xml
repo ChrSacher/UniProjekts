@@ -99,6 +99,7 @@
 			android:layout_weight="1"
 			android:contentDescription="@string/suburb_hint"
 			android:ems="10"
+			android:hint="Name of the Suburb"
 			android:inputType="textPersonName" />
 	</LinearLayout>
 
@@ -123,6 +124,7 @@
 			android:layout_weight="1"
 			android:contentDescription="from"
 			android:ems="10"
+			android:hint="@string/from_hint"
 			android:inputType="textPersonName" />
 
 		<EditText
@@ -132,6 +134,7 @@
 			android:layout_weight="1"
 			android:contentDescription="to"
 			android:ems="10"
+			android:hint="@string/to_hint"
 			android:inputType="textPersonName" />
 
 	</LinearLayout>
@@ -206,7 +209,7 @@
 		android:id="@+id/SearchButton"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:text="Button"
+		android:text="@string/search"
 		tools:text="@string/search" />
 
 </LinearLayout>
